@@ -1,2 +1,7 @@
 gunicorn
 Flask
+Flask_SocketIO
+python-engineio
+python-socketio
+gevent
+eventlet
