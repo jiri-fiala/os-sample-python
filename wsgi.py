@@ -1,7 +1,12 @@
+import os
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit, disconnect
 
-async_mode = "eventlet"
+# defaults to 'eventlet' gunicorn workers, if not specified otherwise in
+# the GUNICORN_WORKER_CLASS env variable
+# acceptable values: 'gevent', 'eventlet'
+# todo, add value verification
+async_mode = os.environ.get('GUNICORN_WORKER_CLASS', 'eventlet')
 
 application = Flask(__name__)
 application.config['SECRET_KEY'] = 'fsdjno342rfh094tn'
@@ -13,7 +18,7 @@ def hello():
 
 @application.route("/ws")
 def wsecho():
-    return render_template("ws.html", async_mode=socketio.async_mode)
+    return render_template("ws.html", async_mode=async_mode)
 
 @socketio.on('my_event', namespace='/test')
 def test_message(message):
